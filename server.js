@@ -25,11 +25,11 @@ router
     });
   })
   .get('/api/datasets/:name/anns/:userId', function(ctx, next) {
-    ctx.body = store.load(ctx.params.name);
+    ctx.body = store.load(ctx.params.name)[ctx.params.userId];
   })
   .put('/api/datasets/:name/anns/:userId', function(ctx, next) {
     console.log(ctx.request.body);
-    //store.save(ctx.params.name, ctx.request.body);
+    store.save(ctx.params.name, ctx.params.userId, ctx.request.body);
     ctx.body = {ok: true};
   })
   .get('/dataset/:name', function(ctx, next) {

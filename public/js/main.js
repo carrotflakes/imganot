@@ -4,6 +4,7 @@ const app = new Vue({
     userId: '',
     datasets: [],
     dataset: null,
+    annLoaded: false,
     images: [],
     imageIdx: 0,
     image: new Image(),
@@ -45,6 +46,22 @@ const app = new Vue({
                  });
                  this.imageIdx = 0;
                  this.image.src = this.images[this.imageIdx].url;
+                 this.annLoaded = false;
+
+                 axios.get(`/api/datasets/${this.dataset.name}/anns/${this.userId}`)
+                      .then((res) => {
+                        const annImages = res.data;
+                        for (const annImage of annImages) {
+                          const image = this.images.find(image => image.url === annImage.url);
+                          if (image) {
+                            image.anns = annImage.anns;
+                            image.done = true;
+                          }
+                        }
+                        this.addLog('loaded');
+                        this.annLoaded = true;
+                        this.render();
+                      });
                }
              });
       }
@@ -60,6 +77,9 @@ const app = new Vue({
       if (dataset && !this.userId.match(/^[a-z0-9_]+$/)) {
         alert('Please input your name.\nLower case alphabets, numbers and _ are allowed in the name.');
         return;
+      }
+      if (this.dataset && !dataset) {
+        this.save();
       }
       this.dataset = dataset;
     },
@@ -207,6 +227,7 @@ const app = new Vue({
         }
       }
       this.imageIdx = Math.max(0, this.imageIdx - 1);
+      this.save();
     },
     next() {
       if (this.anns.length > 0 && !this.currentImage.done) {
@@ -218,6 +239,10 @@ const app = new Vue({
       this.save();
     },
     save() {
+      if (!this.annLoaded) {
+        return;
+      }
+
       const data = [];
       for (const image of this.images) {
         if (image.done) {

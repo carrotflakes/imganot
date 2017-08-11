@@ -24,7 +24,7 @@
       <div v-show="dataset">
         <div>
           <a href="#" @click.prevent="selectDataset(null)">back to dataset list</a>
-          user: {{userId}}
+          | user: {{userId}} | dataset: {{(dataset || {}).name}}
         </div>
         <div>
           <button :class="{activeButton: mode === 'draw'}"

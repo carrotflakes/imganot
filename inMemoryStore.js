@@ -7,17 +7,17 @@ function getStore() {
 }
 
 function load(datasetName) {
-  return store[datasetName];
+  return store[datasetName] || {};
 }
 
-function push(datasetName, data) {
+function save(datasetName, userId, data) {
   if (!store[datasetName])
     store[datasetName] = {};
-  store[datasetName].push(...data);
+  store[datasetName][userId] = data;
 }
 
 module.exports = {
   getStore,
   load,
-  push,
+  save,
 };
