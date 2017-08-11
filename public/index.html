@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>imganot</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+  </head>
+  <body>
+    <div id="app">
+      <div v-show="!dataset">
+        <div>
+          user:
+          <input type="text" v-model="userId">
+        </div>
+        <ul>
+          <li v-for="dataset in datasets">
+            <a href="#"
+               class="dataset"
+               @click.prevent="selectDataset(dataset)">
+              {{dataset.name}}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div v-show="dataset">
+        <div>
+          <a href="#" @click.prevent="selectDataset(null)">back to dataset list</a>
+          user: {{userId}}
+        </div>
+        <div>
+          <button :class="{activeButton: mode === 'draw'}"
+                  @click="setMode('draw')">
+            DRAW
+          </button>
+          <button :class="{activeButton: mode === 'remove'}"
+                  @click="setMode('remove')">
+            REMOVE
+          </button>
+          <button :class="{activeButton: currentImage.done}"
+                  @click="toggleDone()">
+            DONE
+          </button>
+          <span class="spacer"></span>
+          <button @click="prev">&lt;</button>
+          <span class="zoom">{{imageIdx + 1}} / {{images.length}}</span>
+          <button @click="next">&gt;</button>
+          <span class="spacer"></span>
+          <button @click="zoomIn">+</button>
+          <span class="zoom">{{zoom}}</span>
+          <button @click="zoomOut">-</button>
+        </div>
+        <canvas ref="mainCanvas"></canvas>
+        <div class="log">
+          <div v-for="mes in log">{{mes}}</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.1/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

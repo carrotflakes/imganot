@@ -1,0 +1,46 @@
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+
+  background: #eee;
+
+  user-select: none;
+}
+
+canvas {
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+button {
+  width: 6em;
+  height: 4em;
+}
+
+.activeButton {
+  color: #f66;
+}
+
+.zoom {
+  display: inline-block;
+  width: 4em;
+  text-align: right;
+}
+
+.spacer {
+  display: inline-block;
+  width: 10px;
+}
+
+.dataset {
+}
+.dataset:hover {
+  cursor: pointer;
+}
+
+.log > div {
+  color: #999;
+}
+.log > div:nth-child(1) {
+  color: #000;
+}
