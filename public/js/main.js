@@ -81,6 +81,9 @@ const app = new Vue({
       if (this.dataset && !dataset) {
         this.save();
       }
+      if (dataset === null) {
+        this.loadDatasetList();
+      }
       this.dataset = dataset;
     },
     render() {
@@ -228,6 +231,7 @@ const app = new Vue({
       }
       this.imageIdx = Math.max(0, this.imageIdx - 1);
       this.save();
+      this.zoom = 0;
     },
     next() {
       if (this.anns.length > 0 && !this.currentImage.done) {
@@ -235,6 +239,8 @@ const app = new Vue({
           return;
         }
       }
+      this.zoom = 0;
+      this.clipDrawArea();
       this.imageIdx = Math.min(this.images.length - 1, this.imageIdx + 1);
       this.save();
     },
@@ -264,12 +270,31 @@ const app = new Vue({
       this.log.unshift(`[${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}]${message}`);
       this.log.splice(4, 1);
     },
+    loadDatasetList() {
+      axios.get('/api/datasets')
+           .then((res) => {
+             this.datasets = res.data.map(d => {
+               const ps1 = [];
+               const ps2 = [];
+               for (const userId in d.achivement) {
+                 const num = d.achivement[userId];
+                 if (num >= d.numOfImages) {
+                   ps1.push(`${userId} completed`);
+                 } else {
+                   ps2.push(`${userId} is working(${num / d.numOfImages * 100 | 0}%)`);
+                 }
+               }
+               return {
+                 name: d.name,
+                 numOfImages: d.numOfImages,
+                 achivement: ps1.concat(ps2).join(', '),
+               };
+             });
+           });
+    },
   },
   mounted() {
-    axios.get('/api/datasets')
-         .then((res) => {
-           this.datasets = res.data;
-         });
+    this.loadDatasetList();
 
     window.addEventListener(
       'resize',

@@ -11,20 +11,24 @@
           user:
           <input type="text" v-model="userId">
         </div>
-        <ul>
-          <li v-for="dataset in datasets">
+        <div>
+          <h3>dataset list</h3>
+          <div v-for="dataset in datasets">
             <a href="#"
                class="dataset"
                @click.prevent="selectDataset(dataset)">
               {{dataset.name}}
             </a>
-          </li>
-        </ul>
+            {{dataset.numOfImages}} images | {{dataset.achivement}}
+          </div>
+        </div>
       </div>
       <div v-show="dataset">
         <div>
           <a href="#" @click.prevent="selectDataset(null)">back to dataset list</a>
-          | user: {{userId}} | dataset: {{(dataset || {}).name}}
+          <span style="color: #999">user:</span> {{userId}}
+          <span style="color: #999">dataset:</span> {{(dataset || {}).name}}
+          <span style="color: #999">annotated:</span> {{images.filter(i => i.done).length}} / {{images.length}}
         </div>
         <div>
           <button :class="{activeButton: mode === 'draw'}"

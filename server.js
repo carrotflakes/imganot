@@ -12,8 +12,11 @@ app.use(bodyParser());
 router
   .get('/api/datasets', function(ctx, next) {
     ctx.body = Object.keys(datasets).map((name) => {
+      const achivement = store.getAchievement(name);
       return {
-        name: name
+        name: name,
+        achivement: achivement,
+        numOfImages: datasets[name].length,
       };
     });
   })
